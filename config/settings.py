@@ -90,6 +90,31 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://frontend-seven-teal-33.vercel.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://172.20.10.2:5001",
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'origin',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Asia/Dushanbe'
