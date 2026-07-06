@@ -9,12 +9,12 @@ from attendance.views import AttendanceViewSet
 from payments.views import PaymentViewSet
 
 router = DefaultRouter()
-router.register(r'users', UserViewSet)
-router.register(r'students', StudentViewSet)
-router.register(r'groups', GroupViewSet)
-router.register(r'attendance', AttendanceViewSet)
-router.register(r'payments', PaymentViewSet)
-router.register(r'salaries', SalaryViewSet)
+router.register(r'users', UserViewSet, basename='user')
+router.register(r'students', StudentViewSet, basename='student')
+router.register(r'groups', GroupViewSet, basename='group')
+router.register(r'attendance', AttendanceViewSet, basename='attendance')
+router.register(r'payments', PaymentViewSet, basename='payment')
+router.register(r'salaries', SalaryViewSet, basename='salary')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
