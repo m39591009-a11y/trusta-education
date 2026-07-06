@@ -4,12 +4,12 @@ from .models import Attendance
 from .serializers import AttendanceSerializer
 
 class AttendanceViewSet(viewsets.ModelViewSet):
-    queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Attendance.objects.all()
+        user = self.request.user
+        queryset = Attendance.objects.filter(center=user.center)
         group_id = self.request.query_params.get('group')
         date = self.request.query_params.get('date')
         student_id = self.request.query_params.get('student')
@@ -20,3 +20,6 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         if student_id:
             queryset = queryset.filter(student_id=student_id)
         return queryset.order_by('-date')
+
+    def perform_create(self, serializer):
+        serializer.save(center=self.request.user.center)

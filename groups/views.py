@@ -4,6 +4,11 @@ from .models import Group
 from .serializers import GroupSerializer
 
 class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Group.objects.filter(center=self.request.user.center)
+
+    def perform_create(self, serializer):
+        serializer.save(center=self.request.user.center)
