@@ -1,7 +1,9 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 from .models import User, Salary
 from .serializers import UserSerializer, SalarySerializer
+
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
@@ -10,8 +12,17 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return User.objects.filter(center=self.request.user.center)
 
+    def get_object(self):
+        obj = super().get_object()
+        if obj.center != self.request.user.center:
+            raise PermissionDenied("Шумо ба ин корбар дастрасӣ надоред!")
+        return obj
+
     def perform_create(self, serializer):
+        if serializer.validated_data.get('role') == 'owner':
+            raise PermissionDenied("Owner созидан мумкин нест!")
         serializer.save(center=self.request.user.center)
+
 
 class SalaryViewSet(viewsets.ModelViewSet):
     serializer_class = SalarySerializer

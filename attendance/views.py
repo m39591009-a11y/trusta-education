@@ -1,15 +1,16 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 from .models import Attendance
 from .serializers import AttendanceSerializer
+
 
 class AttendanceViewSet(viewsets.ModelViewSet):
     serializer_class = AttendanceSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        queryset = Attendance.objects.filter(center=user.center)
+        queryset = Attendance.objects.filter(center=self.request.user.center)
         group_id = self.request.query_params.get('group')
         date = self.request.query_params.get('date')
         student_id = self.request.query_params.get('student')
@@ -20,6 +21,12 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         if student_id:
             queryset = queryset.filter(student_id=student_id)
         return queryset.order_by('-date')
+
+    def get_object(self):
+        obj = super().get_object()
+        if obj.center != self.request.user.center:
+            raise PermissionDenied("Шумо ба ин давомот дастрасӣ надоред!")
+        return obj
 
     def perform_create(self, serializer):
         serializer.save(center=self.request.user.center)
