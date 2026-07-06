@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from users.permissions import IsOwnerOrAdmin, IsOwner
 from .models import User, Salary
 from .serializers import UserSerializer, SalarySerializer
 
@@ -26,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class SalaryViewSet(viewsets.ModelViewSet):
     serializer_class = SalarySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
     def get_queryset(self):
         teacher_id = self.request.query_params.get('teacher')

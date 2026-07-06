@@ -1,13 +1,14 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from users.permissions import IsOwnerOrAdmin
 from .models import Payment
 from .serializers import PaymentSerializer
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
     def get_queryset(self):
         queryset = Payment.objects.filter(center=self.request.user.center)
