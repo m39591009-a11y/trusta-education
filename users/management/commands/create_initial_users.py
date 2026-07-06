@@ -5,7 +5,6 @@ class Command(BaseCommand):
     help = 'Create initial users'
 
     def handle(self, *args, **kwargs):
-        # Center созем
         center, created = Center.objects.get_or_create(
             name='TRUSTA Demo Center',
             defaults={'phone': '+992 888 44 27 64', 'address': 'Душанбе'}
@@ -13,7 +12,6 @@ class Command(BaseCommand):
         if created:
             self.stdout.write('Center created!')
 
-        # Owner созем
         if not User.objects.filter(username='owner').exists():
             User.objects.create_superuser(
                 username='owner',
@@ -22,8 +20,10 @@ class Command(BaseCommand):
                 center=center
             )
             self.stdout.write('Owner created!')
+        else:
+            User.objects.filter(username='owner').update(center=center)
+            self.stdout.write('Owner center updated!')
 
-        # Admin созем
         if not User.objects.filter(username='admin1').exists():
             User.objects.create_user(
                 username='admin1',
@@ -32,8 +32,10 @@ class Command(BaseCommand):
                 center=center
             )
             self.stdout.write('Admin created!')
+        else:
+            User.objects.filter(username='admin1').update(center=center)
+            self.stdout.write('Admin center updated!')
 
-        # Teacher созем
         if not User.objects.filter(username='teacher1').exists():
             User.objects.create_user(
                 username='teacher1',
@@ -44,5 +46,8 @@ class Command(BaseCommand):
                 center=center
             )
             self.stdout.write('Teacher created!')
+        else:
+            User.objects.filter(username='teacher1').update(center=center)
+            self.stdout.write('Teacher center updated!')
 
         self.stdout.write('Done!')
